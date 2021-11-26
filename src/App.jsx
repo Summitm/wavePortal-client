@@ -6,6 +6,8 @@ import ProgressBar from './progressbar.component';
 
 const App = () => {
     const [currentAccount, setCurrentAccount] = useState("");
+    let [totalWaves] = useState("");
+
     // contract variables
     const contractAddress = "0xf52378b5690529d54D7967EfE8A7c3DAA29bb210";
     const contractABI = abi.abi;
@@ -32,7 +34,7 @@ const App = () => {
                 setCurrentAccount(account);
             }
             else {
-                alert("Didn't find any authorized account to use!");
+                console.log("Didn't find any authorized account to use!");
             }
 
         }
@@ -67,7 +69,7 @@ const App = () => {
                 const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
 
                 // get total waves
-                let totalWaves = await wavePortalContract.getTotalWaves();
+                totalWaves = await wavePortalContract.getTotalWaves();
                 console.log("People waved %d times", totalWaves.toNumber());
 
                 // write to the chain
@@ -80,7 +82,6 @@ const App = () => {
                 // check total waves
                 totalWaves = await wavePortalContract.getTotalWaves();
                 console.log("People waved %d times", totalWaves.toNumber());
-                setState(totalWaves.toNumber());
             }
             else {
                 console.log("We don't have access to the window object!");
@@ -105,7 +106,7 @@ const App = () => {
         <div className="bio">
         <p>I like it when people wave at me. </p><p>I'd feel bad if you passed without waving.</p>
         <p>It's just a button away</p>
-        <ProgressBar waves={totalWaves} />
+        <ProgressBar waves={+totalWaves} />
         </div>
 
         {currentAccount && (

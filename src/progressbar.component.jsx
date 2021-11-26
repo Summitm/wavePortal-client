@@ -1,18 +1,19 @@
 import React from "react";
 
 const ProgressBar = (props) => {
-    const [ waves ] = props;
+    const { waves } = props;
     const progressBar = {
         backgroundColor: '#FFF',
         width: '100%',
-        height: 20,
+        height: 10,
         borderRadius: 10,
         fillColor: '#F34FB3',
-        padding: 5,
+        padding: 2,
         alignContent: 'center',
+        marginBottom: 20,
     };
     const loaderStyle = {
-        color: '#FBAF34',
+        color: '#000000',
         padding: 5,
     }
     return(
