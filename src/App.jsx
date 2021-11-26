@@ -6,7 +6,7 @@ import ProgressBar from './progressbar.component';
 
 const App = () => {
     const [currentAccount, setCurrentAccount] = useState("");
-    let [totalWaves] = useState("");
+    let [totalWaves, setTotalWaves] = useState(0);
 
     // contract variables
     const contractAddress = "0xf52378b5690529d54D7967EfE8A7c3DAA29bb210";
@@ -71,7 +71,7 @@ const App = () => {
                 // get total waves
                 totalWaves = await wavePortalContract.getTotalWaves();
                 console.log("People waved %d times", totalWaves.toNumber());
-
+                setTotalWaves(totalWaves.toNumber());
                 // write to the chain
                 const waveTxn = await wavePortalContract.wave();
                 console.log('Mining... ', waveTxn.hash);
@@ -82,6 +82,7 @@ const App = () => {
                 // check total waves
                 totalWaves = await wavePortalContract.getTotalWaves();
                 console.log("People waved %d times", totalWaves.toNumber());
+                setTotalWaves(totalWaves.toNumber());
             }
             else {
                 console.log("We don't have access to the window object!");
@@ -91,6 +92,7 @@ const App = () => {
             console.error(error);
         }
     }
+
     useEffect(()=>{
         checkIfWalletIsConnected();
     },[])
@@ -100,13 +102,13 @@ const App = () => {
 
       <div className="dataContainer">
         <div className="header">
-        👋   Holla!
+        👋 Holla!
         </div>
 
         <div className="bio">
         <p>I like it when people wave at me. </p><p>I'd feel bad if you passed without waving.</p>
         <p>It's just a button away</p>
-        <ProgressBar waves={+totalWaves} />
+        <ProgressBar waves={totalWaves} />
         </div>
 
         {currentAccount && (

@@ -43,6 +43,8 @@ body{
     padding: 8px;
     cursor: pointer;
     border-radius: 5px;
+    color: #FFFFFF;
+    background-color: #0000FF;
 }
 
 /* divStyle{
