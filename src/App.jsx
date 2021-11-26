@@ -7,9 +7,11 @@ import ProgressBar from './progressbar.component';
 const App = () => {
     const [currentAccount, setCurrentAccount] = useState("");
     let [totalWaves, setTotalWaves] = useState(0);
+    const [allWaves, setAllWaves] = useState([]);
+    const [message, setMessage] = useState("");
 
     // contract variables
-    const contractAddress = "0xf52378b5690529d54D7967EfE8A7c3DAA29bb210";
+    const contractAddress = "0xEF1aD63E729F657585003D6F255a6A9cEA772E41";
     const contractABI = abi.abi;
 
     const checkIfWalletIsConnected = async () => {
@@ -73,7 +75,7 @@ const App = () => {
                 console.log("People waved %d times", totalWaves.toNumber());
                 setTotalWaves(totalWaves.toNumber());
                 // write to the chain
-                const waveTxn = await wavePortalContract.wave();
+                const waveTxn = await wavePortalContract.wave(message);
                 console.log('Mining... ', waveTxn.hash);
 
                 await waveTxn.wait();
@@ -93,6 +95,41 @@ const App = () => {
         }
     }
 
+    // get all waves data
+    const getAllWaves = async () => {
+        try {
+            const { ethereum } = window;
+
+            if(ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+                let waves = await wavePortalContract.getAllWaves();
+
+                // iterate over all waves and return
+                let result = [];
+                waves.forEach(wave => {
+                    result.push({
+                        address: wave.senderAddress,
+                        timestamp: new Date(wave.timestamp * 1000),
+                        message: wave.message,
+                    });
+                });
+
+                // update allwaves state
+                setAllWaves(waves);
+                console.log(waves)
+            }
+            else {
+                console.log("We have no access to the ethereum object!")
+            }
+        }
+        catch(error) {
+            console.error(error);
+        }
+    }
+
     useEffect(()=>{
         checkIfWalletIsConnected();
     },[])
@@ -102,24 +139,36 @@ const App = () => {
 
       <div className="dataContainer">
         <div className="header">
-        👋 Holla!
+            Topic Review
         </div>
 
         <div className="bio">
-        <p>I like it when people wave at me. </p><p>I'd feel bad if you passed without waving.</p>
-        <p>It's just a button away</p>
-        <ProgressBar waves={totalWaves} />
+        <h5>Mind Leaving a review on Web3?</h5>
+        <p>We are trying to get reviews on how you feel about web3.</p>
         </div>
 
         {currentAccount && (
-            <button className="waveButton" onClick={wave}>
-                Wave at Me
-            </button>
+            <form onSubmit.preventDefault={wave}>
+                <div>
+                    <textarea
+                    value={message}
+                    onChange={(e)=>setMessage(e.target.value)}
+                    cols="60"
+                    rows="10"
+                    >
+                    </textarea>
+                </div>
+                <button className="waveButton" type="submit">
+                    Wave to review 👋
+                </button>
+            </form>
         )}
 
         {!currentAccount && (
             <button className="connectButton" onClick={connectWallet}>Connect Wallet To Wave</button>
         )}
+
+        <div className="progress"><ProgressBar waves={totalWaves} /></div>
       </div>
     </div>
   );
