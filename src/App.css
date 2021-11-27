@@ -1,6 +1,10 @@
 body{
     background-color: #000;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
+
 .mainContainer {
   display: flex;
   justify-content: center;
@@ -19,7 +23,8 @@ body{
   text-align: center;
   font-size: 32px;
   font-weight: 600;
-  color: #fff;
+  color: #FEBF34;
+  /* color: #fff; */
 }
 
 .bio {
@@ -48,12 +53,47 @@ body{
     background-color: #0000FF;
 }
 
-progress {
+.progress {
     margin-top:50px;
+    display: hidden;
+}
+table {
+    /* border: solid 1px #FFFFFF; */
+    padding: 15px;
+}
+thead, tbody, th, td{
+    color: #FFFFFF !important;
 }
 
-/* divStyle{
-    background-color: #FFF;
-    width: 50px;
-    height: 100px;
-} */
+tr{
+    border: solid 1px #FFFFFF !important;
+    padding: 5px;
+}
+textarea {
+    border-radius: 5px;
+}
+
+.message-box {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: solid 1px #FFFFFF;
+    margin: 5px;
+    border-radius: 0 20px 20px 20px;
+}
+
+.time-stamp {
+    text-align: right;
+    color: rgb(177, 176, 170);
+    margin-right: 5px;
+}
+
+.message {
+    /* text-align: center; */
+    padding: 5px;
+}
+
+.from {
+    color: #0000FF;
+    text-align: left;
+    margin-left: 5px;
+}

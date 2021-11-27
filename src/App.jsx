@@ -11,7 +11,7 @@ const App = () => {
     const [message, setMessage] = useState("");
 
     // contract variables
-    const contractAddress = "0xEF1aD63E729F657585003D6F255a6A9cEA772E41";
+    const contractAddress = "0xc8fE31F9B04d612E2f79A1F0874d5eb9AaC7b9EA";
     const contractABI = abi.abi;
 
     const checkIfWalletIsConnected = async () => {
@@ -62,7 +62,8 @@ const App = () => {
             console.log(error);
         }
     }
-    const wave = async () => {
+    const wave = async (event) => {
+        event.preventDefault();
         try {
             const { ethereum } = window;
             if(ethereum) {
@@ -75,7 +76,7 @@ const App = () => {
                 console.log("People waved %d times", totalWaves.toNumber());
                 setTotalWaves(totalWaves.toNumber());
                 // write to the chain
-                const waveTxn = await wavePortalContract.wave(message);
+                const waveTxn = await wavePortalContract.wave(message,{gasLimit: 300000});
                 console.log('Mining... ', waveTxn.hash);
 
                 await waveTxn.wait();
@@ -85,6 +86,20 @@ const App = () => {
                 totalWaves = await wavePortalContract.getTotalWaves();
                 console.log("People waved %d times", totalWaves.toNumber());
                 setTotalWaves(totalWaves.toNumber());
+
+                let waves = await wavePortalContract.getAllWaves();
+
+                // iterate over all waves and return
+                let result = [];
+                waves.forEach(wave => {
+                    result.push({
+                        address: wave.senderAddress,
+                        timestamp: new Date(wave.timestamp * 1000),
+                        message: wave.message,
+                    });
+                });
+
+                setAllWaves(result);
             }
             else {
                 console.log("We don't have access to the window object!");
@@ -118,11 +133,11 @@ const App = () => {
                 });
 
                 // update allwaves state
-                setAllWaves(waves);
-                console.log(waves)
+                // console.log(result);
+                setAllWaves(result);
             }
             else {
-                console.log("We have no access to the ethereum object!")
+                console.log("We have no access to the ethereum object!");
             }
         }
         catch(error) {
@@ -130,8 +145,32 @@ const App = () => {
         }
     }
 
+    
+    const getWavesCount = async () => {
+        try {
+            const { ethereum } = window;
+
+            if(ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
+                const webPortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+                let count = await webPortalContract.getTotalWaves();
+                setTotalWaves(count.toNumber());
+            }
+            else {
+                console.log("No wave data available!")
+            }
+        }
+        catch(error) {
+            console.log(error);
+        }
+    }
+
     useEffect(()=>{
         checkIfWalletIsConnected();
+        getAllWaves();
+        getWavesCount();
     },[])
 
   return (
@@ -143,18 +182,20 @@ const App = () => {
         </div>
 
         <div className="bio">
-        <h5>Mind Leaving a review on Web3?</h5>
+        <h3>Mind Leaving a review on Web3?</h3>
         <p>We are trying to get reviews on how you feel about web3.</p>
         </div>
 
         {currentAccount && (
-            <form onSubmit.preventDefault={wave}>
+            <form onSubmit={wave}>
                 <div>
                     <textarea
                     value={message}
                     onChange={(e)=>setMessage(e.target.value)}
-                    cols="60"
+                    cols="70"
                     rows="10"
+                    required
+                    placeholder="Type your review here!"
                     >
                     </textarea>
                 </div>
@@ -169,6 +210,16 @@ const App = () => {
         )}
 
         <div className="progress"><ProgressBar waves={totalWaves} /></div>
+
+        {allWaves.map((wave, index) => {
+            return(
+                <div key={index} className="message-box">
+                    <p className="from"><small>{wave.address.slice(0, 10)}...{wave.address.slice(-4)}</small></p>
+                    <p className="message">{wave.message}</p>
+                    <p className="time-stamp"><small>{wave.timestamp.toString()}</small></p>
+                </div>
+            )
+        })}
       </div>
     </div>
   );
