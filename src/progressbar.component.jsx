@@ -2,6 +2,7 @@ import React from "react";
 
 const ProgressBar = (props) => {
     // const { waves } = props;
+    // <div className="progress"><ProgressBar waves={totalWaves} /></div>
     console.log(props);
     const progressBar = {
         backgroundColor: '#FFF',

@@ -24,7 +24,6 @@ body{
   font-size: 32px;
   font-weight: 600;
   color: #FEBF34;
-  /* color: #fff; */
 }
 
 .bio {
@@ -35,14 +34,15 @@ body{
 
 .waveButton {
   cursor: pointer;
-  margin-top: 16px;
+  margin: 10px;
   padding: 8px;
   border: 0;
   border-radius: 5px;
   color: #FFFFFF;
   background-color: #0000FF;
-  width: 100%;
-  
+  text-align: center;
+  width: inherit;
+  margin-left: 35%;
 }
 
 .connectButton {
@@ -71,6 +71,8 @@ tr{
 }
 textarea {
     border-radius: 5px;
+    width: inherit;
+    height: max-content;
 }
 
 .message-box {

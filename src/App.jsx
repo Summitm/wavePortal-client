@@ -11,7 +11,7 @@ const App = () => {
     const [message, setMessage] = useState("");
 
     // contract variables
-    const contractAddress = "0xc8fE31F9B04d612E2f79A1F0874d5eb9AaC7b9EA";
+    const contractAddress = "0xeba7509cB3515b7bE6806Be10B4d53e14A793917";
     const contractABI = abi.abi;
 
     const checkIfWalletIsConnected = async () => {
@@ -106,7 +106,7 @@ const App = () => {
             }
         }
         catch(error) {
-            console.error(error);
+            console.log(error);
         }
     }
 
@@ -141,7 +141,7 @@ const App = () => {
             }
         }
         catch(error) {
-            console.error(error);
+            console.log(error);
         }
     }
 
@@ -209,7 +209,7 @@ const App = () => {
             <button className="connectButton" onClick={connectWallet}>Connect Wallet To Wave</button>
         )}
 
-        <div className="progress"><ProgressBar waves={totalWaves} /></div>
+        
 
         {allWaves.map((wave, index) => {
             return(
